@@ -21,12 +21,12 @@ except ImportError:
     from urllib2 import urlopen
 
 # Your private key for accessing gitlab: User -> Settings -> Access tokens -> add personal access token with api scope
-PRIVATE_TOKEN = 'token'
+PRIVATE_TOKEN = '2tAnn2nH7YkAAfRRyo7L'
 # Gitlab URL
-URL = 'https://gitlab.example.com'
+URL = 'http://gitlab.mybogame.com'
 # Define your server and projects (name: id)
 # To get id go to project -> Settings -> General -> General project settings
-PROJECTS ={"React": 3}
+PROJECTS ={"ab-blast": 1}
 
 pipelines = []
 
