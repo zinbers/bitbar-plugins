@@ -21,7 +21,7 @@ except ImportError:
     from urllib2 import urlopen
 
 # Your private key for accessing gitlab: User -> Settings -> Access tokens -> add personal access token with api scope
-PRIVATE_TOKEN = '2tAnn2nH7YkAAfRRyo7L'
+PRIVATE_TOKEN = ''
 # Gitlab URL
 URL = 'http://gitlab.mybogame.com'
 # Define your server and projects (name: id)
