@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env PYTHONIOENCODING=UTF-8 /usr/local/bin/python3
 # -*- coding: utf-8 -*-
 
 # <bitbar.title>Gitlab CI</bitbar.title>
@@ -62,7 +62,9 @@ class Job:
     def __init__ (self, json):
         self.name = json["stage"] + (": " + json["name"] if json["name"] != json["stage"] else "" )
         self.status = json["status"]
-        self.duration = 0 if json["duration"] is None or self.status == 'running' else int(json["duration"])
+        self.duration = 0
+        if "duration" in json and self.status != "running":
+            self.duration=int(json["duration"])
         self.commit = json['commit']['title']
 
     # Jobs name with duration
@@ -111,41 +113,41 @@ class Pipeline:
 
 
 # Loop the projects and get thy jobs
-for name, project in PROJECTS.iteritems():
+for name, project in PROJECTS.items():
     runningPipelines = api("projects/"+str(project)+"/pipelines?scope=running")
 
     for pipelineJson in runningPipelines:
         pipeline = Pipeline(name, project, pipelineJson)
         jobsArray = api("projects/"+str(project)+"/pipelines/"+str(pipeline.id)+"/jobs")
-        if jobsArray.count > 0:
+        if len(jobsArray) > 0:
             pipeline.addJobs(jobsArray)
             pipelines.append(pipeline)
 
 pipelineCount = len(pipelines)
 if pipelineCount == 0:
-    print "💤"
+    print("💤")
     exit
 
 
 ## Render the pipelines names (bitbar will loop)
 for index, pipeline in enumerate(pipelines):
-    print '🚀 ',
+    print('🚀 '),
 
     if pipelineCount > 1:
-        print str(index + 1) + '/' + str(pipelineCount) + ' ',
+        print(str(index + 1) + '/' + str(pipelineCount) + ' '),
 
-    print pipeline.displayName()
+    print(pipeline.displayName())
 
 
 ## Start menu
-print "---"
+print("---")
 
 for pipeline in pipelines:
-    print '🚀 ' + pipeline.project.name + ' - ' + pipeline.ref + '| color=black'
-    print '-- commit: ' + pipeline.commit + '| color=black'
-    print '---'
+    print('🚀 ' + pipeline.project.name + ' - ' + pipeline.ref + '| color=black')
+    print('-- commit: ' + pipeline.commit + '| color=black')
+    print('---')
     for job in pipeline.jobs:
-        print stateIcon(job.status) + " ",
+        print(stateIcon(job.status) + " "),
 
         style = ''
         if job.status == 'success':
@@ -153,6 +155,6 @@ for pipeline in pipelines:
         elif job.status == 'running':
             style = '| color=blue'
 
-        print job.displayName() + style
+        print(job.displayName() + style)
 
         
